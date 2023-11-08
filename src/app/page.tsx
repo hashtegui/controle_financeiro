@@ -1,18 +1,15 @@
 "use client";
 
 import NewTransactionForm from "@/components/form";
-import ModalMantine from "@/components/modal-mantine";
-import { useDisclosure } from "@mantine/hooks";
+
+import Modal from "@/components/modal";
+import { useState } from "react";
 import { AiOutlinePlus, AiOutlineSearch } from "react-icons/ai";
 import { FiArrowDownLeft, FiArrowUpRight } from "react-icons/fi";
 
 export default function PaginaPrincipal() {
-  const [opened, { open, close }] = useDisclosure(false);
-  const openModal = () => {
-    console.log("teste");
+  const [open, onOpenChange] = useState(false);
 
-    open();
-  };
   return (
     <main className="min-h-screen max-md:px-8 flex justify-center py-12 bg-green-500">
       <div className="max-w-7xl max-md:px-8 max-md:text-center w-full h-3/4 flex flex-col gap-8 py-8 px-32 bg-white rounded-3xl">
@@ -44,18 +41,22 @@ export default function PaginaPrincipal() {
             <span>Saídas:</span>
             <span>R$ 9,000,00</span>
           </div>
-          <button
+          {/* <button
             onClick={openModal}
             className="w-full max-md:justify-center rounded-md flex items-center justify-center bg-violet-700 text-white font-semibold border-none text-base cursor-pointer gap-2 py-4 px-2"
           >
             <AiOutlinePlus />
             Nova Transação
-          </button>
-          <ModalMantine open={opened} onClose={close}>
-            <ModalMantine.Content title="Nova Transação">
+          </button> */}
+          <Modal open={open} onOpenChange={onOpenChange}>
+            <Modal.Button className="w-full max-md:justify-center rounded-md flex items-center justify-center bg-violet-700 text-white font-semibold border-none text-base cursor-pointer gap-2 py-4 px-2">
+              <AiOutlinePlus />
+              Nova Transação
+            </Modal.Button>
+            <Modal.Content title="Nova Transação">
               <NewTransactionForm />
-            </ModalMantine.Content>
-          </ModalMantine>
+            </Modal.Content>
+          </Modal>
         </section>
       </div>
     </main>

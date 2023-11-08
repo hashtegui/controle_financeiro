@@ -1,5 +1,5 @@
-import { ColorSchemeScript, MantineProvider } from "@mantine/core";
-import "@mantine/core/styles.css";
+import { Theme } from "@radix-ui/themes";
+import "@radix-ui/themes/styles.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -18,11 +18,9 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <ColorSchemeScript />
-      </head>
+      <head></head>
       <body className={inter.className}>
-        <MantineProvider>{children}</MantineProvider>
+        <Theme>{children}</Theme>
       </body>
     </html>
   );
