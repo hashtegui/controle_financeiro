@@ -64,7 +64,7 @@ export default function Home() {
                         </Dialog.Trigger>
                         <Dialog.Portal>
                             <Dialog.Overlay className="fixed inset-0 bg-black/50">
-                                <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-8 text-gray-900 rounded-md max-w-md w-full flex flex-col gap-8">
+                                <Dialog.Content className="data-[state=open]:animate-contentShow fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-8 text-gray-900 rounded-md max-w-md w-full flex flex-col gap-8">
                                     <div className="flex item-center justify-between">
                                         <h2 className="text-xl">
                                             Nova Transação
