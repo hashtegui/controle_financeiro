@@ -8,24 +8,78 @@ datasource db {
 }
 
 model ContaPagar {
-  id            BigInt      @id @default(autoincrement())
-  dt_vencimento DateTime    @db.Date
-  dt_pagamento  DateTime?
-  valor         Decimal?    @default(0) @db.Decimal(18, 2)
-  pago          Boolean?    @default(false)
-  descricao     String?     @db.VarChar(100)
-  lancamento    Lancamento?
+  id           BigInt    @id @default(autoincrement())
+  dtVencimento DateTime  @map("dt_vencimento") @db.Date
+  dtPagamento  DateTime? @map("dt_pagamento")
+  dtCriacao    DateTime  @default(now()) @map("dt_criacao") @db.Timestamptz(6)
+  valor        Decimal?  @default(0) @db.Decimal(18, 2)
+  pago         Boolean?  @default(false)
+  descricao    String?   @db.VarChar(100)
+  userId       BigInt?   @map("user_id")
+
+  lancamento Lancamento?
+  user       User?       @relation(fields: [userId], references: [id])
 
   @@map("conta_pagar")
 }
 
 model Lancamento {
-  id            BigInt      @id @default(autoincrement())
-  valor         Decimal?    @default(0) @db.Decimal(18, 2)
-  tipo          String?     @db.VarChar(1)
-  dt_lancamento DateTime?   @default(now()) @db.Timestamptz(6)
-  contarPagarId BigInt?     @unique
-  contaPagar   ContaPagar? @relation(fields: [contarPagarId], references: [id])
+  id            BigInt   @id @default(autoincrement())
+  valor         Decimal? @default(0) @db.Decimal(18, 2)
+  tipo          String?  @db.VarChar(1)
+  dtLancamento  DateTime @default(now()) @map("dt_lancamento") @db.Timestamptz(6)
+  contarPagarId BigInt?  @unique @map("conta_pagar_id")
+  bancoId       BigInt?  @map("banco_id")
+  cartaoId      BigInt?  @map("cartao_id")
+  userId        BigInt?  @map("user_id")
+
+  user       User?       @relation(fields: [userId], references: [id])
+  contaPagar ContaPagar? @relation(fields: [contarPagarId], references: [id])
+  banco      Banco?      @relation(fields: [bancoId], references: [id])
+  cartao     Cartao?     @relation(fields: [cartaoId], references: [id])
 
   @@map("lancamento")
+}
+
+model Banco {
+  id        BigInt   @id @default(autoincrement())
+  nome      String   @db.VarChar(100)
+  dtCriacao DateTime @default(now()) @map("dt_criacao") @db.Timestamptz(6)
+  saldo     Decimal? @default(0) @db.Decimal(18, 2)
+  userId    BigInt?  @map("user_id")
+
+  user        User?        @relation(fields: [userId], references: [id])
+  lancamentos Lancamento[]
+
+  @@map("banco")
+}
+
+model Cartao {
+  id            BigInt   @id @default(autoincrement())
+  dtCriacao     DateTime @default(now()) @map("dt_criacao") @db.Timestamptz(6)
+  descricao     String   @db.VarChar(100)
+  diaFechamento Int?     @map("dia_fechamento")
+  diaVencimento Int?     @map("dia_vencimento")
+  userId        BigInt?  @map("user_id")
+
+  user        User?        @relation(fields: [userId], references: [id])
+  lancamentos Lancamento[]
+
+  @@map("cartao")
+}
+
+model User {
+  id        BigInt   @id @default(autoincrement())
+  dtCriacao DateTime @default(now()) @map("dt_criacao") @db.Timestamptz(6)
+  nome      String   @db.VarChar(100)
+  email     String   @unique @db.VarChar(100)
+  login     String   @unique @db.VarChar(30)
+  password  String   @db.VarChar(30)
+
+  contas      ContaPagar[]
+  lancamentos Lancamento[]
+  bancos      Banco[]
+  cartoes     Cartao[]
+
+  @@map("user")
 }
